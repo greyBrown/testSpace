@@ -70,6 +70,8 @@ public class FileDownloadServlet extends HttpServlet {
         response.setContentType("text/csv"); // CSV 파일 타입
         response.setHeader("Content-Disposition", "attachment; filename=\"data.csv\"");
 
+	// 만약 name에 변수를 넣는다면 filename=\"" + name + "_data.csv\"" 이런식으로 이스케이프 문자
+
         // 바이트 배열로 변환
         byte[] fileContent = data.getBytes("UTF-8");
         

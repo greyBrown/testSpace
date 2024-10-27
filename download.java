@@ -44,3 +44,42 @@ public Download() {
 	  in.close();
 	    
 	}
+
+
+============================================================
+
+//아니라면 이런식도 괜찮을 것 같음
+
+import java.io.BufferedOutputStream;
+import java.io.IOException;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+@WebServlet("/downloadFile")
+public class FileDownloadServlet extends HttpServlet {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        
+        // 요청 파라미터에서 데이터 가져오기
+        String data = request.getParameter("userData"); // "이름, 별명, 아이디"
+        
+        // 응답 헤더 설정
+        response.setContentType("text/csv"); // CSV 파일 타입
+        response.setHeader("Content-Disposition", "attachment; filename=\"data.csv\"");
+
+        // 바이트 배열로 변환
+        byte[] fileContent = data.getBytes("UTF-8");
+        
+        // 응답에 파일 내용 쓰기
+        try (BufferedOutputStream out = new BufferedOutputStream(response.getOutputStream())) {
+            out.write(fileContent);
+            out.flush();
+        } catch (IOException e) {
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR); // 서버 에러
+        }
+    }
+}
+
